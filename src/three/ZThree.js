@@ -193,6 +193,54 @@ flyTo(option) {
     return tween;
 }
 
+// 模型移动
+  modelMove(option, obj) {
+    option.fromPosition = option.fromPosition || [];
+    option.toPosition = option.toPosition || [];
+
+    option.duration = option.duration || 1000; // 飞行时间
+    option.easing = option.easing || TWEEN.Easing.Linear.None;
+    let tween = new TWEEN.Tween({
+      x1: option.fromPosition[0],
+      y1: option.fromPosition[1],
+      z1: option.fromPosition[2]
+    })
+      .to(
+        {
+          x1: option.toPosition[0],
+          y1: option.toPosition[1],
+          z1: option.toPosition[2]
+        },
+        option.duration
+      )
+      .easing(TWEEN.Easing.Linear.None);
+    tween.onUpdate(() => {
+      this.controls.enabled = false;
+      obj.position.set(tween._object.x1, tween._object.y1, tween._object.z1);
+
+      this.controls.update();
+      if (option.update instanceof Function) {
+        option.update(tween);
+      }
+    });
+    tween.onStart(() => {
+      this.controls.enabled = false;
+      if (option.start instanceof Function) {
+        option.start();
+      }
+    });
+    tween.onComplete(() => {
+      this.controls.enabled = true;
+      if (option.done instanceof Function) {
+        option.done();
+      }
+    });
+    tween.onStop(() => (option.stop instanceof Function ? option.stop() : ''));
+    tween.start();
+    TWEEN.add(tween);
+    return tween;
+  }
+
 render(callback) {
     callback();
     this.frameId = requestAnimationFrame(() => this.render(callback));

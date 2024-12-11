@@ -19,8 +19,12 @@ export function loaderModel(app) {
                         if (obj.material) {
                             app.modelMaterials[obj.name] = {
                             material: obj.material
-                        };
+                            };
                         }
+
+                        // 将模型的坐标也储存一份，在做楼层动画使用
+                        let { x, y, z } = obj.position;
+                        obj.position_tmp = { x, y, z };
 
 
                         if (receiveModels.includes(obj.name)) {

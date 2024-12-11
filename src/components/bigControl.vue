@@ -11,22 +11,34 @@
       <img src="./../assets/image/back.png" alt="" />
       <p>返回</p>
     </div>
+    <!-- 楼层ui -->
+    <layer
+      :layers="layerData"
+      :active="currentLayer"
+      :styles="{ top: '55%', left: '72%', height: '400px' }"
+      @change="changeLayer"
+      v-if="isShowFloorBack"
+    ></layer>
   </div>
 </template>
 
 <script>
-  import {loaderFloorManage} from "@/three/floorManage";
+  import {loaderFloorManage, setModelLayer} from "@/three/floorManage";
   import { setModelDefaultMatrial } from '@/three/loaderModel';
   import layer from '@/components/layer';
 
   export default {
     name: '',
-    components: {},
+    components: {
+      layer
+    },
     props: {},
     data() {
       return {
         isShowFloorBack: false,
-        
+        layerData: [],
+        currentLayer: '全楼',
+        curFloorModel: null,
         controls: [
           {
             name: '园区总览',
@@ -76,12 +88,21 @@
 
         loaderFloorManage(window.app);
         setModelDefaultMatrial(window.app);
-      }
+      },
+      changeLayer(layer) {
+        this.currentLayer = layer;
+        setModelLayer(window.app, this.curFloorModel, layer, this.layerData);
+      },
 
     },
     mounted() {
       this.$EventBus.$on('changeFloorUI', (obj) => {
         this.isShowFloorBack = obj.isShowFloorBack;
+        this.curFloorModel = obj.model;
+        const layerNames = obj.model.children
+          .filter((item) => item.name.indexOf('F') > -1)
+          .map((item) => item.name);
+        this.layerData = [this.currentLayer].concat(layerNames);
       });
     }
   };
