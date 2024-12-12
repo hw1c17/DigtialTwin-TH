@@ -19,6 +19,14 @@
       @change="changeLayer"
       v-if="isShowFloorBack"
     ></layer>
+    <tooltip
+      :style="{
+        visibility: roomTooltipStyle.show ? 'visible' : 'hidden',
+        left: roomTooltipStyle.x + 'px',
+        top: roomTooltipStyle.y + 'px'
+      }"
+      :data="roomTooltipStyle"
+    ></tooltip>
   </div>
 </template>
 
@@ -26,15 +34,24 @@
   import {loaderFloorManage, setModelLayer} from "@/three/floorManage";
   import { setModelDefaultMatrial } from '@/three/loaderModel';
   import layer from '@/components/layer';
+  import tooltip from '@/components/tooltip';
+  import { cameraUrls } from '@/assets/mock/mock';
 
   export default {
     name: '',
     components: {
-      layer
+      layer,
+      tooltip
     },
     props: {},
     data() {
       return {
+        roomTooltipStyle: {
+          show: false,
+          x: 0,
+          y: 0,
+          name: ''
+        },
         isShowFloorBack: false,
         layerData: [],
         currentLayer: '全楼',
@@ -103,6 +120,18 @@
           .filter((item) => item.name.indexOf('F') > -1)
           .map((item) => item.name);
         this.layerData = [this.currentLayer].concat(layerNames);
+      });
+
+      this.$EventBus.$on('changeRoomTooltip', (obj) => {
+        
+       
+          this.roomTooltipStyle = Object.assign(
+            {
+              摄像头: obj.name,
+              视频: cameraUrls[obj.name]
+            },
+            obj
+          );
       });
     }
   };

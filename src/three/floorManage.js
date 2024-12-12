@@ -3,6 +3,7 @@ import { CSS3DSprite } from 'three/examples/jsm/renderers/CSS3DRenderer';
 import { floorBaseMaterial } from './material';
 import EventBus from '@/bus';
 import { destroyControlGroupText } from '@/three/loaderModel';
+import { roomTexts } from '@/assets/mock/mock';
 
 
 export function loaderFloorManage(app) {
@@ -71,6 +72,49 @@ export function createFloorText(app) {
     }
 
 }
+
+export function createRoomText(app, model) {
+  model.traverse((obj) => {
+    if (obj.isMesh) {
+      roomTexts.forEach((item) => {
+        if (obj.name.indexOf(item.name) > -1) {
+          const name = obj.name;
+          const position = Object.values(app.getModelWorldPostion(obj));
+          const html = `
+            <div class="room-3d animated fadeIn"  id="${name}"  >
+                <p class="text">${name}</p>
+                <div class="${item.class}"></div>
+            </div>`;
+          app.instance.add({
+            parent: app.controlGroup,
+            cssObject: CSS3DSprite,
+            name,
+            element: html,
+            position,
+            scale: [0.05, 0.05, 0.05]
+          });
+        }
+      });
+    }
+  });
+
+  const textDoms = document.getElementsByClassName('room-3d');
+  for (let i = 0; i < textDoms.length; i++) {
+    const textDom = textDoms[i];
+    textDom.onclick = (event) => {
+      const model = app.model.getObjectByName(textDom.id);
+      EventBus.$emit('changeRoomTooltip', {
+        name: model.name,
+        x: event.x,
+        y: event.y,
+        show: true
+      });
+    };
+  }
+
+  
+}
+
 
 export function setModelLayer(app, model, layerName, layerData, callback) {
   // 清除当前楼层文本
