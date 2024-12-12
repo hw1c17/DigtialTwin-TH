@@ -32,7 +32,7 @@
 
 <script>
   import {loaderFloorManage, setModelLayer} from "@/three/floorManage";
-  import { setModelDefaultMatrial } from '@/three/loaderModel';
+  import { destroyControlGroup, setModelDefaultMatrial } from '@/three/loaderModel';
   import layer from '@/components/layer';
   import tooltip from '@/components/tooltip';
   import { cameraUrls } from '@/assets/mock/mock';
@@ -60,6 +60,11 @@
           {
             name: '园区总览',
             goFunction: () => {
+              window.app.flyTo({
+                position: app.cameraPosition,
+                controls: app.controlsTarget,
+                duration: 1000
+              });
             },
             backFunction: () => {}
           },
@@ -69,7 +74,24 @@
               loaderFloorManage(window.app);
             },
             backFunction: () => {
-              console.log(1);
+              destroyControlGroup(window.app, 'floorText-3d');
+              this.isShowFloorBack = false;
+              this.roomTooltipStyle.show = false;
+              if (this.curFloorModel && this.currentLayer !== '全楼') {
+                this.currentLayer = '全楼';
+                setModelLayer(
+                  window.app,
+                  this.curFloorModel,
+                  this.currentLayer,
+                  this.layerData,
+                  () => {
+                    setModelDefaultMatrial(window.app);
+                    this.curFloorModel = null;
+                  }
+                );
+              } else {
+                setModelDefaultMatrial(window.app);
+              }
             }
           },
           {
@@ -102,9 +124,19 @@
 
       backFloorBase() {
         this.isShowFloorBack = false;
+        this.roomTooltipStyle.show = false;
 
-        loaderFloorManage(window.app);
-        setModelDefaultMatrial(window.app);
+        if (this.curFloorModel && this.currentLayer !== '全楼') {
+          this.currentLayer = '全楼';
+          setModelLayer(window.app, this.curFloorModel, this.currentLayer, this.layerData, () => {
+            setModelDefaultMatrial(window.app);
+            loaderFloorManage(window.app);
+            this.curFloorModel = null;
+          });
+        } else {
+          setModelDefaultMatrial(window.app);
+          loaderFloorManage(window.app);
+        }
       },
       changeLayer(layer) {
         this.currentLayer = layer;

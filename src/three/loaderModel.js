@@ -62,3 +62,20 @@ export function destroyControlGroupText(app, className) {
   }
   app.instance.removeAll(app.controlGroup);
 }
+
+export function destroyControlGroup(app, className) {
+  if (app?.controlGroup?.children?.length === 0) {
+    return;
+  }
+  if (className) {
+    destroyControlGroupText(app, className);
+  }
+  for (let i = app.controlGroup.children.length - 1; i > -1; i--) {
+    const obj = app.controlGroup.children[i];
+    if (obj.isMesh) {
+      obj.geometry.dispose();
+      obj.material.dispose();
+      app.controlGroup.remove(obj);
+    }
+  }
+}

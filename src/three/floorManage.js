@@ -118,6 +118,7 @@ export function createRoomText(app, model) {
 
 export function setModelLayer(app, model, layerName, layerData, callback) {
   // 清除当前楼层文本
+  destroyControlGroupText(app, 'room-3d');
   const currentLayer = Number(layerName.substring(0, layerName.indexOf('F')));
   for (let i = 0; i < model.children.length; i++) {
     let mesh = model.children[i];

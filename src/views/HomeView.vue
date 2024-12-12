@@ -27,9 +27,13 @@ export default {
       app.initOrbitControls();
       app.initLight();
       window.app = app;
+      //设置初始相机的初始位置，在控制台输入app.camera.position和app.controls.target获取
+      app.cameraPosition = [30.31, 70.72, 171];
+      app.controlsTarget = [93.48, 5.17, 85.36];
       
 
       controls = app.controls;
+      controls.target.set(...app.controlsTarget);
       let instance = new cssRender(CSS3DRenderer, app);
       app.cssRenderer = instance.cssRenderer;
       app.instance = instance;
@@ -37,11 +41,12 @@ export default {
       clock = new THREE.Clock();
 
       camera = app.camera;
+      camera.position.set(...app.cameraPosition);
       scene = app.scene;
       renderer = app.renderer;
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-      console.log(app);
+      
 
       await loaderModel(app);
 
