@@ -26,6 +26,7 @@ initThree() {
      });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(width, height);
+    this.renderer.setClearColor('#ffffff',0.75);
     this.el.append(this.renderer.domElement);
 
     this.gui = new GUI();
@@ -41,7 +42,7 @@ initThree() {
 }
 
 initLight() {
-    const ambientLight = new THREE.AmbientLight( 0x404040 ); 
+    const ambientLight = new THREE.AmbientLight( 0x404040, 3 ); 
     this.scene.add( ambientLight );
     
     const directionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );

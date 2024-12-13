@@ -54,7 +54,7 @@
         },
         isShowFloorBack: false,
         layerData: [],
-        currentLayer: '全楼',
+        currentLayer: '总览',
         curFloorModel: null,
         controls: [
           {
@@ -77,8 +77,8 @@
               destroyControlGroup(window.app, 'floorText-3d');
               this.isShowFloorBack = false;
               this.roomTooltipStyle.show = false;
-              if (this.curFloorModel && this.currentLayer !== '全楼') {
-                this.currentLayer = '全楼';
+              if (this.curFloorModel && this.currentLayer !== '总览') {
+                this.currentLayer = '总览';
                 setModelLayer(
                   window.app,
                   this.curFloorModel,
@@ -126,8 +126,8 @@
         this.isShowFloorBack = false;
         this.roomTooltipStyle.show = false;
 
-        if (this.curFloorModel && this.currentLayer !== '全楼') {
-          this.currentLayer = '全楼';
+        if (this.curFloorModel && this.currentLayer !== '总览') {
+          this.currentLayer = '总览';
           setModelLayer(window.app, this.curFloorModel, this.currentLayer, this.layerData, () => {
             setModelDefaultMatrial(window.app);
             loaderFloorManage(window.app);

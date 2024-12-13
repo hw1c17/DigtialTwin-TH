@@ -7,9 +7,9 @@ export const floorBaseMaterial = new THREE.MeshBasicMaterial({
   depthWrite: false
 });
 
-export const floorTestMaterial = new THREE.MeshBasicMaterial({
+export const floorLineMaterial = new THREE.MeshBasicMaterial({
   color: 0xFFF8DC,
   transparent: true,
   opacity: 0.1,
-  depthWrite: false
+  wireframe: true,
 });

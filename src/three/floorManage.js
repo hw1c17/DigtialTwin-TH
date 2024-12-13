@@ -19,7 +19,7 @@ export function loaderFloorManage(app) {
 
 export function createFloorText(app) {
     app.model.traverse((obj) => {
-        if (obj.name.indexOf('楼顶') > -1) {
+        if (obj.name.indexOf('楼顶') > -1|| obj.name.indexOf('模型中心') > -1) {
             const name = obj.parent.name;
             const position = Object.values(app.getModelWorldPostion(obj));
             const html = `<div class="floorText-3d animated fadeIn" id="${name}"><p class="text">${name}</p></div>`;
@@ -137,7 +137,7 @@ export function setModelLayer(app, model, layerName, layerData, callback) {
     let position_tmp = mesh.position_tmp;
     let toPosition;
 
-    if (layerName === '全楼') {
+    if (layerName === '总览') {
       // 点击全部楼层时执行
       toPosition = [position_tmp.x, position_tmp.y, position_tmp.z];
     } else {
@@ -154,7 +154,7 @@ export function setModelLayer(app, model, layerName, layerData, callback) {
         toPosition,
         duration: 300,
          done: () => {
-          if (layerName === '全楼') {
+          if (layerName === '总览') {
             if (callback) {
               callback();
               return;
